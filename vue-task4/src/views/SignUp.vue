@@ -20,29 +20,20 @@
 </template>
 
 <script>
-import firebase from '../main.js';
+import firebase from './../firebase';
 export default {
   data(){
     return {
-      userName:'',
-      mail:'',
-      password:'',
-      user:{email:'' ,name:''},
+      userName: '',
+      mail: '',
+      password: '',
+      user: {email: '' ,name: ''},
     }
   },
   methods:{
     signUp(){
-      firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.mail,this.password)
-      .then(()=>{
-        this.user.email = this.mail;
-        this.user.name = this.userName;
-        this.$store.commit('addUser',this.user);
-        console.log(this.$store.state.userLists);//test
-        alert('新規登録完了しました！');//test
-        this.$router.push('/login');
-      });
+      this.$router.push('/login');
+      firebase.signup(this.mail,this.password,this.userName);
     }
   },
 }

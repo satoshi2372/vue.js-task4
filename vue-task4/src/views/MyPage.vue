@@ -2,36 +2,43 @@
   <div>
     <div id="header">
       <div>
-        <p class="header-text">{{userName}}さんようこそ！！</p>
+        <p class="header-text">{{ user.displayName }}さんようこそ！！</p>
       </div>
-      <div>
-        <p id="wallet">残高：{{wallet}}</p>
+      <div>{{ status }}
+        <p id="wallet">残高：{{}}</p>
         <button id="logout-btn" @click="logOut">ログアウト</button>
       </div>
     </div>
     <h2>ユーザー一覧</h2>
     <p id="user-names">ユーザー名</p>
     <ul>
-      <li v-for="user in users" :key="user">{{user}}
+      <!-- <li v-for="user in users" :key="user">{{user}}
         <button>walletを見る</button>
         <button>送る</button>
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>
 
 <script>
-import firebase from '../main.js';
-
+import firebase from './../firebase';
 export default {
+  mounted(){
+    firebase.onAuth();
+  },
+  computed:{
+    user(){
+      return this.$store.getters.user;
+    },
+    status(){
+      console.log(this.$store.getters.inSigned);
+      return this.$store.getters.inSigned;
+    }
+  },
   methods:{
     logOut(){
-      firebase
-        .auth()
-        .signOut()
-        .then(()=>{
-          this.$router.push('/login');
-        })
+      firebase.logout();
+      this.$router.push('/login');
     }
   }
 }

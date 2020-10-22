@@ -16,23 +16,29 @@
 </template>
 
 <script>
-import firebase from '../main.js';
+import firebase from './../firebase';
 export default {
   data(){
     return {
-      mail:'',
-      password:'',
+      mail: '',
+      password: '',
     }
+  },
+  mounted(){
+    firebase.onAuth();
+  },
+  computed:{
+    user(){
+      return this.$store.getters.user;
+    },
   },
   methods:{
     logIn(){
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.mail,this.password)
-        .then(()=>{
-          alert('ログインできました！');//test
-          this.$router.push('/mypage');
+      this.$store.dispatch('login',{
+        mail:this.mail,
+        password:this.password
         });
+      this.$router.push('/mypage');
     }
   },
 }
