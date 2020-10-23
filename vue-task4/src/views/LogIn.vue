@@ -38,7 +38,9 @@ export default {
         mail: this.mail,
         password: this.password
         });
-      this.$router.push('/mypage');
+      setTimeout(() => {
+        this.$router.push('/mypage');
+      }, 1000);
     }
   },
 }

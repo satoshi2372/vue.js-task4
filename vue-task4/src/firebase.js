@@ -13,18 +13,30 @@ var firebaseConfig = {
   measurementId: "G-MBVM7ECX74"
 };
 
+
 export default {
-  init() {
+  firebase,
+  init() {//初期化と永続認証
         firebase.initializeApp(firebaseConfig);//初期化
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);//認証設定
   },
-  signup(mail, password,name) {
+  myWallet(name) {//ログインしたユーザのwallet参照
+    firebase.database().ref(name).once('value').then(function(snapshot){
+      let userData = (snapshot.val().wallet) || 'Anonymous';
+      return userData;
+    })
+  },
+  signup(mail, password,name) {//新規ユーザー登録
       firebase
         .auth()
         .createUserWithEmailAndPassword(mail,password)
         .then(() => {
         //firebaseユーザ表示名を変更し管理する
-        firebase.auth().currentUser.updateProfile({displayName: name});
+          firebase.auth().currentUser.updateProfile({ displayName: name });
+          //新規ユーザーにwalletを付与しdb保存する
+          firebase.database().ref(name).set({
+            wallet: 1000,
+          });
       })
       .cacth((error) => {
         // Handle Errors here.

@@ -4,8 +4,8 @@
       <div>
         <p class="header-text">{{ user.displayName }}さんようこそ！！</p>
       </div>
-      <div>{{ status }}
-        <p id="wallet">残高：{{}}</p>
+      <div>
+        <p id="wallet">残高：{{ wallet }}</p>
         <button id="logout-btn" @click="logOut">ログアウト</button>
       </div>
     </div>
@@ -30,9 +30,9 @@ export default {
     user(){
       return this.$store.getters.user;
     },
-    status(){
-      console.log(this.$store.getters.inSigned);
-      return this.$store.getters.inSigned;
+    wallet(){
+      const user = this.$store.getters.user;
+      return firebase.myWallet(user.displayName);
     }
   },
   methods:{

@@ -22,7 +22,7 @@ export default new Vuex.Store({
   actions: {
     login( context, user ) {
       firebase.login(user.mail, user.password)
-    }
+    },
   },
   getters: {
     user(state) {
