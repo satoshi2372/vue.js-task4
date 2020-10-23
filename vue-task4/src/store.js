@@ -17,11 +17,11 @@ export default new Vuex.Store({
     //ログインしているかどうか
     onUserStatusChanged(state, status) {
       state.status = status;
-    }
+    },
   },
   actions: {
-    login(mail, password) {
-      firebase.login(mail, password);
+    login( context, user ) {
+      firebase.login(user.mail, user.password)
     }
   },
   getters: {

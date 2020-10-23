@@ -35,8 +35,8 @@ export default {
   methods:{
     logIn(){
       this.$store.dispatch('login',{
-        mail:this.mail,
-        password:this.password
+        mail: this.mail,
+        password: this.password
         });
       this.$router.push('/mypage');
     }

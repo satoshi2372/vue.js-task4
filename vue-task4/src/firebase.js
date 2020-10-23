@@ -33,16 +33,18 @@ export default {
       })
   },
   login(mail, password) {
-    console.log(mail, password);//test
       firebase
         .auth()
         .signInWithEmailAndPassword(mail,password)
         .then(() => {
+          alert('ログインに成功しました');//test
         })
-        .cacth((error) => {
+        .catch(function(error) {
           // Handle Errors here.
-          console.log(error.code);
-          console.log(error.message);
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode);
+          console.log(errorMessage);
         })
   },
   logout() {
