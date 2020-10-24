@@ -1,4 +1,8 @@
 import firebase from 'firebase';
+import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/app';
+import 'firebase/database';
 import store from './store';
 
 //firebase Authentcation
@@ -22,8 +26,11 @@ export default {
   },
   myWallet(name) {//ログインしたユーザのwallet参照
     firebase.database().ref(name).once('value').then(function(snapshot){
-      let userData = (snapshot.val().wallet) || 'Anonymous';
-      return userData;
+      let userData = snapshot.val().wallet;
+      if (userData != undefined) {
+        console.log(userData);
+        store.commit('refWallet', userData);
+      }
     })
   },
   signup(mail, password,name) {//新規ユーザー登録
@@ -39,9 +46,11 @@ export default {
           });
       })
       .cacth((error) => {
-        // Handle Errors here.
-        console.log(error.code);
-        console.log(error.message);
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode);
+          console.log(errorMessage);
       })
   },
   login(mail, password) {

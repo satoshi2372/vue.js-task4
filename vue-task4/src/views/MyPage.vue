@@ -22,6 +22,7 @@
 
 <script>
 import firebase from './../firebase';
+
 export default {
   mounted(){
     firebase.onAuth();
@@ -32,7 +33,8 @@ export default {
     },
     wallet(){
       const user = this.$store.getters.user;
-      return firebase.myWallet(user.displayName);
+      this.$store.dispatch('refWallet',user.displayName);
+      return this.$store.getters.wallet;
     }
   },
   methods:{
