@@ -20,20 +20,36 @@
 </template>
 
 <script>
-import firebase from './../firebase';
 export default {
+  mounted(){
+    //新規登録が完了したらログインとページ遷移
+    this.$store.watch(
+      (state,getters) => getters.doneSignup,
+      (newVal, oldVal) => {
+        if(newVal !== oldVal){
+          this.$store.dispatch('login',{
+            mail: this.mail,
+            password: this.password
+          });
+          this.$router.push('/mypage');
+        }
+      }
+    )
+  },
   data(){
     return {
       userName: '',
       mail: '',
       password: '',
-      user: {email: '' ,name: ''},
     }
   },
   methods:{
     signUp(){
-      this.$router.push('/login');
-      firebase.signup(this.mail,this.password,this.userName);
+      this.$store.dispatch('signup',{
+        mail: this.mail,
+        password: this.password,
+        name: this.userName
+        });
     }
   },
 }

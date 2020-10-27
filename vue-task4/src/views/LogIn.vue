@@ -16,16 +16,13 @@
 </template>
 
 <script>
-import firebase from './../firebase';
+
 export default {
   data(){
     return {
       mail: '',
       password: '',
     }
-  },
-  mounted(){
-    firebase.onAuth();
   },
   computed:{
     user(){
@@ -38,9 +35,7 @@ export default {
         mail: this.mail,
         password: this.password
         });
-      setTimeout(() => {
-        this.$router.push('/mypage');
-      }, 1000);
+      this.$router.push('/mypage');
     }
   },
 }
