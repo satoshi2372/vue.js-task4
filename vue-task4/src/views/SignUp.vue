@@ -22,16 +22,16 @@
 <script>
 export default {
   mounted(){
-    //新規登録が完了したらログインとページ遷移
+    // 新規登録が完了したらログインする
     this.$store.watch(
       (state,getters) => getters.doneSignup,
       (newVal, oldVal) => {
         if(newVal !== oldVal){
+          // console.log('検知した ');//test
           this.$store.dispatch('login',{
             mail: this.mail,
             password: this.password
-          });
-          this.$router.push('/mypage');
+          })
         }
       }
     )

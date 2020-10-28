@@ -24,18 +24,12 @@ export default {
       password: '',
     }
   },
-  computed:{
-    user(){
-      return this.$store.getters.user;
-    },
-  },
   methods:{
     logIn(){
       this.$store.dispatch('login',{
         mail: this.mail,
         password: this.password
         });
-      this.$router.push('/mypage');
     }
   },
 }

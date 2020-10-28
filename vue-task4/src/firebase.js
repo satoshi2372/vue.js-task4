@@ -4,6 +4,7 @@ import 'firebase/auth';
 import 'firebase/app';
 import 'firebase/database';
 import store from './store';
+import router from './router';
 
 //firebase Authentcation
 const firebaseConfig = {
@@ -45,7 +46,6 @@ export default {
   },
   //新規ユーザー登録
   signup(mail, password, name) {
-    console.log(mail, password, name);
       firebase
         .auth()
         .createUserWithEmailAndPassword(mail,password)
@@ -56,8 +56,10 @@ export default {
           firebase.database().ref(name).set({
             wallet: 1000,
           });
+          // this.login(mail, password);
           //store signupを完了状態にする。
           store.commit('doneSignup', true);
+          console.log('新規登録完了');//test
       })
       .catch((error) => {
           // Handle Errors here.
@@ -73,10 +75,12 @@ export default {
         .auth()
         .signInWithEmailAndPassword(mail,password)
         .then(() => {
+          //stateをログインしてる状態にする
           store.commit('onUserStatusChanged', true);
+          console.log('ログイン完了');//test
           this.onAuth();
-          //登録ユーザーを配列管理（ログインユーザ除く）
           this.refUsers();
+          router.push('/mypage');
         })
         .catch(function(error) {
           // Handle Errors here.
@@ -96,15 +100,15 @@ export default {
         if (user !== null) {
         firebase.auth().currentUser.providerData.forEach((profile) => {
           //objからログインユーザー名を消す
-          console.log(profile.displayName);//test
+          // console.log(profile.displayName);//test
           delete user[profile.displayName];
-          console.log(user);//test
+          // console.log(user);//test
           //objからキーを取り出し配列で管理
           const userList = [];
           for (let key in user) {
             userList.push( key );
           }
-          console.log(userList);//test
+          // console.log(userList);//test
           store.commit('addUsers',userList);
         })
         }
@@ -125,9 +129,10 @@ export default {
           store.commit('onUserStatusChanged', false);
         })
   },
-  //ログインユーザー参照 ログインしてればユーザー情報返す 無ければ
+  //ログインユーザー参照 ログインしてればユーザー情報返す 無ければ初期値に戻す
   onAuth() {
     firebase.auth().onAuthStateChanged((user) => {
+      console.log(user);//test
       if (user) {
         console.log(user);//test
         store.commit('onAuthStateChanged', user);

@@ -49,31 +49,28 @@
 </template>
 
 <script>
-import firebase from './../firebase';
-
 export default {
   mounted(){
+    this.users.push(...this.$store.getters.users);
     //store値の変更をwatchで監視(ログインユーザ以外の登録ユーザー)
     this.$store.watch(
       (state,getters) => getters.users,
-      (newVal) => {
-        this.users.splice(0, this.users.length);
-        this.users.push(...newVal);
+      (newVal, oldVal) => {
+        console.log('動いてる？');
+        if(newVal !== oldVal){
+          this.users.splice(0, this.users.length);
+          this.users.push( ...newVal);
+        }
       }
     )
     // ログインしてないならリダイレクト
-    // this.$store.watch(
-    //   (state,getters) => getters.inSigned,
-    //   (newval, oldval) => {
-    //     if(newval === oldval){
-    //       this.$router.push('/login');
-    //     }
-    //   }
-    // )
+    if(this.$store.getters.inSigned === false){
+        this.$router.push('/login');
+    }
   },
   data(){
     return {
-      users: [],//登録ユーザー（ログイン以外）
+      users: [ ],//登録ユーザー（ログイン以外）
       show: false,
       show2: false,
       payWallet: '',
@@ -97,7 +94,7 @@ export default {
   },
   methods:{
     logOut(){
-      firebase.logout();
+      this.$store.dispatch('logout');
       this.$router.push('/login');
     },
     showWallet(event){

@@ -5,7 +5,6 @@ import store from './store'
 
 import firebase from './firebase'
 firebase.init();
-firebase.onAuth();
 
 Vue.config.productionTip = false;
 

@@ -50,6 +50,11 @@ export default new Vuex.Store({
     },
     login( context, user ) {
       firebase.login(user.mail, user.password)
+      // await firebase.onAuth();
+      // await firebase.refUsers();
+    },
+    logout() {
+      firebase.logout();
     },
     //ログインユーザーのwallet参照
     refMyWallet(context, name) {
