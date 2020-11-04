@@ -56,9 +56,9 @@ export default {
           firebase.database().ref(name).set({
             wallet: 1000,
           });
-          // this.login(mail, password);
           //store signupを完了状態にする。
-          store.commit('doneSignup', true);
+          store.commit('onUserStatusChanged', true);
+          this.login(mail, password);
           console.log('新規登録完了');//test
       })
       .catch((error) => {
@@ -80,7 +80,7 @@ export default {
           console.log('ログイン完了');//test
           this.onAuth();
           this.refUsers();
-          router.push('/mypage');
+          router.push('/mypage',() => {});
         })
         .catch(function(error) {
           // Handle Errors here.
@@ -123,10 +123,9 @@ export default {
         .then(() => {
           //ログアウト後にstoreを初期値に戻す
           this.onAuth();
-          //store signupを新規登録できてない初期状態にする
-          store.commit('doneSignup', false);
           //ログインしてない状態に戻す
           store.commit('onUserStatusChanged', false);
+          console.log('ログアウト完了');//test
         })
   },
   //ログインユーザー参照 ログインしてればユーザー情報返す 無ければ初期値に戻す

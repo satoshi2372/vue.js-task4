@@ -22,19 +22,20 @@
 <script>
 export default {
   mounted(){
+    //これが原因だったよう！
     // 新規登録が完了したらログインする
-    this.$store.watch(
-      (state,getters) => getters.doneSignup,
-      (newVal, oldVal) => {
-        if(newVal !== oldVal){
-          // console.log('検知した ');//test
-          this.$store.dispatch('login',{
-            mail: this.mail,
-            password: this.password
-          })
-        }
-      }
-    )
+    // this.$store.watch(
+    //   (state,getters) => getters.inSigned,
+    //   (newVal, oldVal) => {
+    //     if(newVal !== oldVal){
+    //       console.log('検知した ');//test
+    //       this.$store.dispatch('login',{
+    //         mail: this.mail,
+    //         password: this.password
+    //       })
+    //     }
+    //   }
+    // )
   },
   data(){
     return {

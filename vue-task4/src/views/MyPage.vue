@@ -1,5 +1,5 @@
 <template>
-  <div id="overlay">
+  <div>
     <div id="header">
       <div id="header-text">
         <p>{{ user.displayName }}さんようこそ！！</p>
@@ -20,25 +20,26 @@
         </div>
       </li>
     </ul>
+    <div :class="{'overlay': modalOverlay}" @click="closeModal"></div>
     <div id="footer">
       <p>Copyright &copy;2019 ⚪︎⚪︎Inc All rights reserved.</p>
       <!-- クリックしたときに残高表示 -->
-      <div class="wallet-item" v-show="show">
+      <div class="wallet-item" :class="{'is-open': walletModalActive}">
         <div class="wallet-item_header">
           <p>{{ userName }}さんの残高</p>
           <p>{{ userWallet }}</p>
         </div>
         <div class="wallet-item_footer">
-          <button class="close-btn" @click="noneWallet">close</button>
+          <button class="close-btn" @click="openItem">close</button>
         </div>
       </div>
 
       <!-- クリックしたときに表示しwallet送金 -->
-      <div class="wallet-item" v-show="show2">
+      <div class="wallet-item" :class="{'is-open': walletModalActive2}">
         <div class="wallet-item_header">
           <p>あなたの残高{{ wallet }}</p>
           <p>送る金額</p>
-          <input type="number" v-model="payWallet">
+          <input id="pay-input" type="number" v-model="payWallet">
         </div>
         <div class="wallet-item_footer">
           <button class="close-btn" @click="payMyWallet">送信</button>
@@ -56,7 +57,7 @@ export default {
     this.$store.watch(
       (state,getters) => getters.users,
       (newVal, oldVal) => {
-        console.log('動いてる？');
+        console.log('動いてる？');//test
         if(newVal !== oldVal){
           this.users.splice(0, this.users.length);
           this.users.push( ...newVal);
@@ -65,7 +66,9 @@ export default {
     )
     // ログインしてないならリダイレクト
     if(this.$store.getters.inSigned === false){
-        this.$router.push('/login');
+        this.$router.push('/login').catch(err => {
+            console.log(err);
+          });
     }
   },
   data(){
@@ -74,6 +77,9 @@ export default {
       show: false,
       show2: false,
       payWallet: '',
+      walletModalActive: false,
+      walletModalActive2: false,
+      modalOverlay: false,
     }
   },
   computed:{
@@ -93,20 +99,45 @@ export default {
     },
   },
   methods:{
+    openItem(){
+      this.toggleModal();
+      this.toggleOverlay();
+    },
+    toggleModal(){
+      this.walletModalActive = ! this.walletModalActive;
+    },
+    toggleModal2(){
+      this.walletModalActive2 = ! this.walletModalActive2;
+    },
+    toggleOverlay(){
+      this.modalOverlay = ! this.modalOverlay;
+    },
+    closeModal(){
+      if(this.walletModalActive === true){
+        this.toggleModal();
+      } else if (this.walletModalActive2 === true){
+        this.toggleModal2();
+      }
+      this.toggleOverlay();
+    },
     logOut(){
       this.$store.dispatch('logout');
-      this.$router.push('/login');
+      this.$router.push('/login').catch(err => {
+            console.log(err);
+      })
     },
     showWallet(event){
       const name = event.target.parentElement.previousElementSibling.textContent;
       this.$store.dispatch('refUserWallet',name);
       this.$store.dispatch('addUserName',name);
-      this.show = true;
+      this.toggleModal();
+      this.toggleOverlay();
     },
     showWallet2(event){
       const name = event.target.parentElement.previousElementSibling.textContent;
       this.$store.dispatch('addUserName',name);
-      this.show2 = true;
+      this.toggleModal2();
+      this.toggleOverlay();
     },
     noneWallet(){
       this.show = false;
@@ -119,12 +150,23 @@ export default {
       //それぞれのユーザーwalletを変更する。
       this.$store.dispatch('sendWallet',{number: this.payWallet, name: userName, loginName: loginUserName});
       this.show2 = false;
+      this.toggleModal2();
+      this.toggleOverlay();
     },
   }
 }
 </script>
 
 <style scoped>
+.overlay{
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background-color: rgba(0,0,0,0.75);
+}
 #header{
   display: flex;
   justify-content: space-between;
@@ -194,13 +236,24 @@ export default {
   position: relative;
 }
 .wallet-item{
-  position: absolute;
-  top: 50%;
+  position: fixed;
+  width: 35%;
+  height: 35%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
+  bottom: 20%;
+  transform: translate(-50%, -10%);
+  overflow-y: hidden;
+  visibility: hidden;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 1s ease;
 }
+.is-open{
+  visibility: visible;
+  opacity: 1;
+  z-index: 100;
+}
+
 .wallet-item_header{
   background-color: white;
   padding: 16px;
@@ -217,5 +270,4 @@ export default {
   padding: 10px;
   margin-left: 80px;
 }
-
 </style>

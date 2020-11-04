@@ -6,7 +6,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    signup: false,//新規登録できたか
     user: {},//ログインユーザー
     users: '',//登録ユーザー(ログイン以外)
     userName:'',//特定ユーザー名
@@ -15,10 +14,6 @@ export default new Vuex.Store({
     status: false,//ログイしてるかどうか
   },
   mutations: {
-    //新規登録完了したか管理
-    doneSignup(state, signup) {
-      state.signup = signup;
-    },
     //firebaseが返したユーザー情報
     onAuthStateChanged(state, user) {
       state.user = user;
@@ -74,9 +69,6 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    doneSignup(state) {
-      return state.signup;
-    },
     user(state) {
       return state.user;
     },
