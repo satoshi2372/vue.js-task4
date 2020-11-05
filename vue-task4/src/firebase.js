@@ -80,7 +80,7 @@ export default {
           console.log('ログイン完了');//test
           this.onAuth();
           this.refUsers();
-          router.push('/mypage',() => {});
+          router.push('/mypage');
         })
         .catch(function(error) {
           // Handle Errors here.

@@ -104,18 +104,18 @@ export default {
       this.toggleOverlay();
     },
     toggleModal(){
-      this.walletModalActive = ! this.walletModalActive;
+      this.walletModalActive =! this.walletModalActive;
     },
     toggleModal2(){
-      this.walletModalActive2 = ! this.walletModalActive2;
+      this.walletModalActive2 =! this.walletModalActive2;
     },
     toggleOverlay(){
-      this.modalOverlay = ! this.modalOverlay;
+      this.modalOverlay =! this.modalOverlay;
     },
     closeModal(){
-      if(this.walletModalActive === true){
+      if(this.walletModalActive){
         this.toggleModal();
-      } else if (this.walletModalActive2 === true){
+      } else if (this.walletModalActive2){
         this.toggleModal2();
       }
       this.toggleOverlay();
